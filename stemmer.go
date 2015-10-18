@@ -2,6 +2,8 @@ package stemmer
 
 import "strings"
 
+// import "fmt"
+
 // A stem represents the part of a word
 // or whole word before a matching
 // condition.
@@ -193,6 +195,18 @@ func step1BAfter(input string) string {
 		}
 	} else if stem.oCondition && stem.measure == 1 {
 		return input + "E"
+	}
+
+	return input
+}
+
+func step1C(input string) string {
+	last := len(input) - 1
+	if input[last] == 'Y' {
+		stem := processStem(input[0:last])
+		if stem.vCondition {
+			return replace(input, "Y", "I")
+		}
 	}
 
 	return input

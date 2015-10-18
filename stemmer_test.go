@@ -200,7 +200,7 @@ var testCases = map[string]Step{
 		},
 	},
 
-	"step2B": Step{
+	"step1B": Step{
 		step1B,
 		[]TestRule{
 			TestRule{
@@ -296,6 +296,24 @@ var testCases = map[string]Step{
 			TestRule{
 				"FILING",
 				"FILE",
+			},
+		},
+	},
+
+	"step1C": Step{
+		step1C,
+		[]TestRule{
+			TestRule{
+				"HAPPY",
+				"HAPPI",
+			},
+			TestRule{
+				"SKY",
+				"SKY",
+			},
+			TestRule{
+				"GUY",
+				"GUI",
 			},
 		},
 	},
