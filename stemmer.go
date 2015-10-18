@@ -140,10 +140,62 @@ func step1A(input string) string {
 }
 
 func step1B(input string) string {
-	// length := len(input)
-	//
-	// if input[]
-	return ""
+	last := len(input) - 1
+	if input[last] == 'D' {
+		if input[last-1] == 'E' {
+			if input[last-2] == 'E' {
+				if processStem(input[0:last-2]).measure > 0 {
+					return replace(input, "EED", "EE")
+				}
+			} else {
+				if processStem(input[0 : last-1]).vCondition {
+					return step1BAfter(replace(input, "ED", ""))
+				}
+			}
+		}
+	} else if input[last] == 'G' {
+		if input[last-1] == 'N' {
+			if input[last-2] == 'I' {
+				if processStem(input[0 : last-2]).vCondition {
+					return step1BAfter(replace(input, "ING", ""))
+				}
+			}
+		}
+	}
+
+	return input
+}
+
+func step1BAfter(input string) string {
+	last := len(input) - 1
+	if input[last] == 'T' {
+		if input[last-1] == 'A' {
+			return replace(input, "AT", "ATE")
+		}
+	}
+
+	if input[last] == 'L' {
+		if input[last-1] == 'B' {
+			return replace(input, "BL", "BLE")
+		}
+	}
+
+	if input[last] == 'Z' {
+		if input[last-1] == 'I' {
+			return replace(input, "IZ", "IZE")
+		}
+	}
+
+	stem := processStem(input)
+	if stem.dCondition {
+		if stem.lastChar != 'L' && stem.lastChar != 'S' && stem.lastChar != 'Z' {
+			return input[0:last]
+		}
+	} else if stem.oCondition && stem.measure == 1 {
+		return input + "E"
+	}
+
+	return input
 }
 
 //*********************

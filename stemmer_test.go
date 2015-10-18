@@ -232,6 +232,71 @@ var testCases = map[string]Step{
 				"SING",
 				"SING",
 			},
+
+			TestRule{
+				"CONFLATED",
+				"CONFLATE",
+			},
+
+			TestRule{
+				"TROUBLED",
+				"TROUBLE",
+			},
+
+			TestRule{
+				"SIZED",
+				"SIZE",
+			},
+
+			TestRule{
+				"HOPPING",
+				"HOP",
+			},
+
+			TestRule{
+				"TANNED",
+				"TAN",
+			},
+
+			TestRule{
+				"TANNING",
+				"TAN",
+			},
+
+			TestRule{
+				"FALLING",
+				"FALL",
+			},
+
+			TestRule{
+				"FALLED",
+				"FALL",
+			},
+
+			TestRule{
+				"HISSING",
+				"HISS",
+			},
+
+			TestRule{
+				"FIZZING",
+				"FIZZ",
+			},
+
+			TestRule{
+				"FIZZED",
+				"FIZZ",
+			},
+
+			TestRule{
+				"FAILING",
+				"FAIL",
+			},
+
+			TestRule{
+				"FILING",
+				"FILE",
+			},
 		},
 	},
 }
