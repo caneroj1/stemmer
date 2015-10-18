@@ -7,8 +7,9 @@ import "testing"
 // of stem structs for what the test should
 // should output.
 type TestStemmer struct {
-	in   string
-	want stem
+	in      string
+	sTarget byte
+	want    stem
 }
 
 // TestSubs holds a few string values. in is the input
@@ -28,125 +29,115 @@ type TestRule struct {
 	want string
 }
 
+// Step holds a function that will be used to map all of the inputs
+// in rules.
+type Step struct {
+	f     func(string) string
+	rules []TestRule
+}
+
 var stemCases = []TestStemmer{
 
 	TestStemmer{
 		"TR",
-		stem{
-			0,
-		},
+		' ',
+		makeStem(0),
 	},
 
 	TestStemmer{
 		"EE",
-		stem{
-			0,
-		},
+		' ',
+		makeStemWithConditions(0, false, true, false, false),
 	},
 
 	TestStemmer{
 		"TREE",
-		stem{
-			0,
-		},
+		' ',
+		makeStemWithConditions(0, false, true, false, false),
 	},
 
 	TestStemmer{
 		"Y",
-		stem{
-			0,
-		},
+		' ',
+		makeStemWithConditions(0, false, true, false, false),
 	},
 
 	TestStemmer{
 		"BY",
-		stem{
-			0,
-		},
+		' ',
+		makeStemWithConditions(0, false, true, false, false),
 	},
 
 	TestStemmer{
 		"TROUBLE",
-		stem{
-			1,
-		},
+		' ',
+		makeStemWithConditions(1, false, true, false, false),
 	},
 
 	TestStemmer{
 		"TRoublE",
-		stem{
-			1,
-		},
+		' ',
+		makeStemWithConditions(1, false, true, false, false),
 	},
 
 	TestStemmer{
 		"OATS",
-		stem{
-			1,
-		},
+		' ',
+		makeStemWithConditions(1, false, true, false, false),
 	},
 
 	TestStemmer{
 		"TREES",
-		stem{
-			1,
-		},
+		' ',
+		makeStemWithConditions(1, false, true, false, false),
 	},
 
 	TestStemmer{
 		"IVY",
-		stem{
-			1,
-		},
+		' ',
+		makeStemWithConditions(1, false, true, false, false),
 	},
 
 	TestStemmer{
 		"ORRERY",
-		stem{
-			2,
-		},
+		' ',
+		makeStemWithConditions(2, false, true, false, false),
 	},
 
 	TestStemmer{
 		"OATEN",
-		stem{
-			2,
-		},
+		' ',
+		makeStemWithConditions(2, false, true, false, false),
 	},
 
 	TestStemmer{
 		"PRIVATE",
-		stem{
-			2,
-		},
+		' ',
+		makeStemWithConditions(2, false, true, false, false),
 	},
 
 	TestStemmer{
 		"TROUBLES",
-		stem{
-			2,
-		},
+		' ',
+		makeStemWithConditions(2, false, true, false, false),
 	},
 
 	TestStemmer{
 		"troubles",
-		stem{
-			2,
-		},
+		' ',
+		makeStemWithConditions(2, false, true, false, false),
 	},
 
 	TestStemmer{
 		"relational",
-		stem{
-			4,
-		},
+		' ',
+		makeStemWithConditions(4, false, true, false, false),
 	},
 
 	TestStemmer{
 		"rational",
-		stem{
-			3,
-		},
+		' ',
+		makeStemWithConditions(3, false, true, false, false),
 	},
 }
 
@@ -195,32 +186,70 @@ var subCases = []TestSub{
 	},
 }
 
-var testCases = map[string][]TestRule{
+var testCases = map[string]Step{
 
-	"step1A": []TestRule{
-		TestRule{
-			"caresses",
-			"caress",
+	"step1A": Step{
+		step1A,
+		[]TestRule{
+			TestRule{
+				"CARESSES",
+				"CARESS",
+			},
+
+			TestRule{
+				"PONIES",
+				"PONI",
+			},
+
+			TestRule{
+				"TIES",
+				"TI",
+			},
+
+			TestRule{
+				"CARESS",
+				"CARESS",
+			},
+
+			TestRule{
+				"CATS",
+				"CAT",
+			},
 		},
+	},
 
-		TestRule{
-			"ponies",
-			"poni",
-		},
+	"step2B": Step{
+		step1B,
+		[]TestRule{
+			TestRule{
+				"FEED",
+				"FEED",
+			},
 
-		TestRule{
-			"ties",
-			"ti",
-		},
+			TestRule{
+				"AGREED",
+				"AGREE",
+			},
 
-		TestRule{
-			"caress",
-			"caress",
-		},
+			TestRule{
+				"PLASTERED",
+				"PLASTER",
+			},
 
-		TestRule{
-			"cats",
-			"cat",
+			TestRule{
+				"BLED",
+				"BLED",
+			},
+
+			TestRule{
+				"MOTORING",
+				"MOTOR",
+			},
+
+			TestRule{
+				"SING",
+				"SING",
+			},
 		},
 	},
 }
@@ -229,7 +258,7 @@ var testCases = map[string][]TestRule{
 // the 'measure' of a stem.
 func TestMeasure(t *testing.T) {
 	for _, test := range stemCases {
-		got := measure(test.in)
+		got := processStem(test.in, test.sTarget)
 		if got != test.want {
 			t.Errorf("measure(%v) = %v. Wanted %v", test.in, got, test.want)
 		}
@@ -248,12 +277,14 @@ func TestReplace(t *testing.T) {
 	}
 }
 
-// TestStep1A tests Step1A of the Porter-stemmer algorithm.
-func TestStep1A(t *testing.T) {
-	for _, test := range testCases["step1A"] {
-		got := step1A(test.in)
-		if got != test.want {
-			t.Errorf("step1A(%v) = %v. Wanted = %v", test.in, got, test.want)
+// TestRules tests each of the steps in the Porter-Stemmer algorithm.
+func TestRules(t *testing.T) {
+	for stepName, step := range testCases {
+		for _, test := range step.rules {
+			got := step.f(test.in)
+			if got != test.want {
+				t.Errorf("%s(%v) = %v. Wanted = %v", stepName, test.in, got, test.want)
+			}
 		}
 	}
 }

@@ -10,18 +10,34 @@ import "strings"
 // rule      = caresses  ->  caress
 // The stem is "care"
 type stem struct {
-	measure int
+	measure    int
+	oCondition bool
+	vCondition bool
+	dCondition bool
+	sCondition bool
 }
 
-// A rule represents a mapping from an old suffix to a
-// new suffix when a condition is met.
-type rule struct {
-	measure   int
-	oldSuffix string
-	newSuffix string
+func makeStem(m int) stem {
+	return stem{
+		m,
+		false,
+		false,
+		false,
+		false,
+	}
 }
 
-var letterToConsonantMap = map[int32]bool{
+func makeStemWithConditions(m int, o, v, d, s bool) stem {
+	return stem{
+		m,
+		o,
+		v,
+		d,
+		s,
+	}
+}
+
+var letterToConsonantMap = map[byte]bool{
 	65: false,
 	66: true,
 	67: true,
@@ -50,17 +66,24 @@ var letterToConsonantMap = map[int32]bool{
 	90: true,
 }
 
-// measure computes how many times a string
+// stem computes how many times a string
 // switches from a sequence of vowels to a sequence of
-// consonants.
-func measure(input string) (s stem) {
+// consonants as well as verifying the different stem conditions.
+func processStem(input string, sTarget byte) (s stem) {
 	previousWasVowel := false
-	for _, char := range strings.ToUpper(input) {
+	uppedString := strings.ToUpper(input)
+	length := len(uppedString)
+	for i := 0; i < length; i++ {
+		char := uppedString[i]
 		if shouldIncrementMeasure(char, previousWasVowel) {
 			s.measure++
 		}
 
-		previousWasVowel = currentIsVowel(char, previousWasVowel)
+		previousWasVowel = currentIsVowel(char, previousWasVowel, &s)
+	}
+
+	if uppedString[length-1] == sTarget {
+		s.sCondition = true
 	}
 
 	return
@@ -75,7 +98,37 @@ func replace(input, target, replacement string) string {
 	return input
 }
 
-func shouldIncrementMeasure(char int32, prev bool) bool {
+//	TODO:
+//	in the initial stem entry function filter out strings of
+//	length 1 and 2
+func step1A(input string) string {
+	length := len(input)
+	if input[length-1] == 'S' {
+		if input[length-2] == 'E' {
+			if input[length-3] == 'I' {
+				return replace(input, "IES", "I")
+			} else if input[length-3] == 'S' && input[length-4] == 'S' {
+				return replace(input, "SSES", "SS")
+			}
+		}
+
+		if input[length-2] != 'S' {
+			return replace(input, "S", "")
+		}
+	}
+
+	return input
+}
+
+func step1B(input string) string {
+	return ""
+}
+
+//*********************
+//	Utility Functions
+//*********************
+
+func shouldIncrementMeasure(char byte, prev bool) bool {
 	if char == 'Y' {
 		return prev
 	}
@@ -83,9 +136,17 @@ func shouldIncrementMeasure(char int32, prev bool) bool {
 	return letterToConsonantMap[char] && prev
 }
 
-func currentIsVowel(char int32, prev bool) bool {
+func currentIsVowel(char byte, prev bool, s *stem) bool {
+	var result bool
 	if char == 'Y' {
-		return !prev
+		result = !prev
+	} else {
+		result = !letterToConsonantMap[char]
 	}
-	return !letterToConsonantMap[char]
+
+	if !s.vCondition {
+		s.vCondition = result
+	}
+
+	return result
 }
