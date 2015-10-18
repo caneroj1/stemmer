@@ -14,26 +14,16 @@ type stem struct {
 	oCondition bool
 	vCondition bool
 	dCondition bool
-	sCondition bool
+	lastChar   byte
 }
 
-func makeStem(m int) stem {
-	return stem{
-		m,
-		false,
-		false,
-		false,
-		false,
-	}
-}
-
-func makeStemWithConditions(m int, o, v, d, s bool) stem {
+func makeStem(m int, o, v, d bool, b byte) stem {
 	return stem{
 		m,
 		o,
 		v,
 		d,
-		s,
+		b,
 	}
 }
 
@@ -69,10 +59,12 @@ var letterToConsonantMap = map[byte]bool{
 // stem computes how many times a string
 // switches from a sequence of vowels to a sequence of
 // consonants as well as verifying the different stem conditions.
-func processStem(input string, sTarget byte) (s stem) {
+func processStem(input string) (s stem) {
 	previousWasVowel := false
 	uppedString := strings.ToUpper(input)
 	length := len(uppedString)
+	doubleConsonants := 0
+
 	for i := 0; i < length; i++ {
 		char := uppedString[i]
 		if shouldIncrementMeasure(char, previousWasVowel) {
@@ -80,11 +72,38 @@ func processStem(input string, sTarget byte) (s stem) {
 		}
 
 		previousWasVowel = currentIsVowel(char, previousWasVowel, &s)
+		if i == (length - 3) {
+
+			if !previousWasVowel {
+				s.oCondition = true
+			}
+		}
+
+		if i == (length - 2) {
+			if !previousWasVowel {
+				if s.oCondition {
+					s.oCondition = false
+				}
+
+				doubleConsonants++
+			}
+		}
+
+		if i == (length - 1) {
+			s.lastChar = char
+			if !previousWasVowel {
+				if s.oCondition && charCheck(char) {
+					s.oCondition = false
+				}
+
+				doubleConsonants++
+			} else {
+				s.oCondition = false
+			}
+		}
 	}
 
-	if uppedString[length-1] == sTarget {
-		s.sCondition = true
-	}
+	s.dCondition = (doubleConsonants == 2)
 
 	return
 }
@@ -102,17 +121,17 @@ func replace(input, target, replacement string) string {
 //	in the initial stem entry function filter out strings of
 //	length 1 and 2
 func step1A(input string) string {
-	length := len(input)
-	if input[length-1] == 'S' {
-		if input[length-2] == 'E' {
-			if input[length-3] == 'I' {
+	last := len(input) - 1
+	if input[last] == 'S' {
+		if input[last-1] == 'E' {
+			if input[last-2] == 'I' {
 				return replace(input, "IES", "I")
-			} else if input[length-3] == 'S' && input[length-4] == 'S' {
+			} else if input[last-2] == 'S' && input[last-3] == 'S' {
 				return replace(input, "SSES", "SS")
 			}
 		}
 
-		if input[length-2] != 'S' {
+		if input[last-1] != 'S' {
 			return replace(input, "S", "")
 		}
 	}
@@ -121,6 +140,9 @@ func step1A(input string) string {
 }
 
 func step1B(input string) string {
+	// length := len(input)
+	//
+	// if input[]
 	return ""
 }
 
@@ -149,4 +171,14 @@ func currentIsVowel(char byte, prev bool, s *stem) bool {
 	}
 
 	return result
+}
+
+func doubleConsonantCheck(prev bool, s *stem) {
+	if !prev && !s.dCondition {
+		s.dCondition = true
+	}
+}
+
+func charCheck(char byte) bool {
+	return char == 'W' || char == 'X' || char == 'Y'
 }

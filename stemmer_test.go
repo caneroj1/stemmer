@@ -7,9 +7,8 @@ import "testing"
 // of stem structs for what the test should
 // should output.
 type TestStemmer struct {
-	in      string
-	sTarget byte
-	want    stem
+	in   string
+	want stem
 }
 
 // TestSubs holds a few string values. in is the input
@@ -40,104 +39,87 @@ var stemCases = []TestStemmer{
 
 	TestStemmer{
 		"TR",
-		' ',
-		makeStem(0),
+		makeStem(0, false, false, true, 'R'),
 	},
 
 	TestStemmer{
 		"EE",
-		' ',
-		makeStemWithConditions(0, false, true, false, false),
+		makeStem(0, false, true, false, 'E'),
 	},
 
 	TestStemmer{
 		"TREE",
-		' ',
-		makeStemWithConditions(0, false, true, false, false),
+		makeStem(0, false, true, false, 'E'),
 	},
 
 	TestStemmer{
 		"Y",
-		' ',
-		makeStemWithConditions(0, false, true, false, false),
+		makeStem(0, false, true, false, 'Y'),
 	},
 
 	TestStemmer{
 		"BY",
-		' ',
-		makeStemWithConditions(0, false, true, false, false),
+		makeStem(0, false, true, false, 'Y'),
 	},
 
 	TestStemmer{
 		"TROUBLE",
-		' ',
-		makeStemWithConditions(1, false, true, false, false),
+		makeStem(1, false, true, false, 'E'),
 	},
 
 	TestStemmer{
 		"TRoublE",
-		' ',
-		makeStemWithConditions(1, false, true, false, false),
+		makeStem(1, false, true, false, 'E'),
 	},
 
 	TestStemmer{
 		"OATS",
-		' ',
-		makeStemWithConditions(1, false, true, false, false),
+		makeStem(1, false, true, true, 'S'),
 	},
 
 	TestStemmer{
 		"TREES",
-		' ',
-		makeStemWithConditions(1, false, true, false, false),
+		makeStem(1, false, true, false, 'S'),
 	},
 
 	TestStemmer{
 		"IVY",
-		' ',
-		makeStemWithConditions(1, false, true, false, false),
+		makeStem(1, false, true, false, 'Y'),
 	},
 
 	TestStemmer{
 		"ORRERY",
-		' ',
-		makeStemWithConditions(2, false, true, false, false),
+		makeStem(2, false, true, false, 'Y'),
 	},
 
 	TestStemmer{
 		"OATEN",
-		' ',
-		makeStemWithConditions(2, false, true, false, false),
+		makeStem(2, true, true, false, 'N'),
 	},
 
 	TestStemmer{
 		"PRIVATE",
-		' ',
-		makeStemWithConditions(2, false, true, false, false),
+		makeStem(2, false, true, false, 'E'),
 	},
 
 	TestStemmer{
 		"TROUBLES",
-		' ',
-		makeStemWithConditions(2, false, true, false, false),
+		makeStem(2, true, true, false, 'S'),
 	},
 
 	TestStemmer{
 		"troubles",
-		' ',
-		makeStemWithConditions(2, false, true, false, false),
+		makeStem(2, true, true, false, 'S'),
 	},
 
 	TestStemmer{
 		"relational",
-		' ',
-		makeStemWithConditions(4, false, true, false, false),
+		makeStem(4, true, true, false, 'L'),
 	},
 
 	TestStemmer{
 		"rational",
-		' ',
-		makeStemWithConditions(3, false, true, false, false),
+		makeStem(3, true, true, false, 'L'),
 	},
 }
 
@@ -258,7 +240,7 @@ var testCases = map[string]Step{
 // the 'measure' of a stem.
 func TestMeasure(t *testing.T) {
 	for _, test := range stemCases {
-		got := processStem(test.in, test.sTarget)
+		got := processStem(test.in)
 		if got != test.want {
 			t.Errorf("measure(%v) = %v. Wanted %v", test.in, got, test.want)
 		}
