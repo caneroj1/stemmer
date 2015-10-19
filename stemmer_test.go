@@ -317,6 +317,41 @@ var testCases = map[string]Step{
 			},
 		},
 	},
+
+	"step5A": Step{
+		step5A,
+		[]TestRule{
+			TestRule{
+				"PROBATE",
+				"PROBAT",
+			},
+
+			TestRule{
+				"RATE",
+				"RATE",
+			},
+
+			TestRule{
+				"CEASE",
+				"CEAS",
+			},
+		},
+	},
+
+	"step5B": Step{
+		step5B,
+		[]TestRule{
+			TestRule{
+				"CONTROLL",
+				"CONTROL",
+			},
+
+			TestRule{
+				"ROLL",
+				"ROLL",
+			},
+		},
+	},
 }
 
 // TestMeasure tests functionality to compute
