@@ -1,5 +1,7 @@
 package stemmer
 
+// import "fmt"
+
 //	TODO:
 //	in the initial stem entry function filter out strings of
 //	length 1 and 2
@@ -117,13 +119,13 @@ func step2(input string) string {
 
 func step2ProcessA(input string) string {
 	last := len(input) - 1
-	if input[last-6:last+1] == "TIONAL" {
-		if input[last-7] == 'A' {
-			if processStem(input[0:last-7]).measure > 0 {
+	if input[last-5:last+1] == "TIONAL" {
+		if input[last-6] == 'A' {
+			if processStem(input[0:last-6]).measure > 0 {
 				return replace(input, "ATIONAL", "ATE")
 			}
 		} else {
-			if processStem(input[0:last-6]).measure > 0 {
+			if processStem(input[0:last-5]).measure > 0 {
 				return replace(input, "TIONAL", "TION")
 			}
 		}
@@ -136,11 +138,11 @@ func step2ProcessC(input string) string {
 	last := len(input) - 1
 	if input[last-2:last+1] == "NCI" {
 		if input[last-3] == 'A' {
-			if processStem(input[0:last-3]).measure > 0 {
+			if processStem(input[0:last-2]).measure > 0 {
 				return replace(input, "ANCI", "ANCE")
 			}
 		} else if input[last-3] == 'E' {
-			if processStem(input[0:last-3]).measure > 0 {
+			if processStem(input[0:last-2]).measure > 0 {
 				return replace(input, "ENCI", "ENCE")
 			}
 		}
@@ -174,7 +176,7 @@ func step2ProcessL(input string) string {
 		} else if input[last-2] == 'T' {
 			if input[last-4:last-2] == "EN" {
 				if processStem(input[0:last-4]).measure > 0 {
-					replace(input, "ENTLI", "ENT")
+					return replace(input, "ENTLI", "ENT")
 				}
 			}
 		} else if input[last-2] == 'E' {
@@ -196,23 +198,80 @@ func step2ProcessL(input string) string {
 func step2ProcessO(input string) string {
 	last := len(input) - 1
 	if input[last] == 'N' {
-		if input[last-3:last-1] == "ATI" {
-			if input[last-4] == 'Z' {
-				if input[last-5] == 'I' {
-					if processStem(input[0:last-5]).measure > 0 {
-						replace(input, "IZATION", "IZE")
+		if input[last-4:last-1] == "ATI" {
+			if input[last-5] == 'Z' {
+				if input[last-6] == 'I' {
+					if processStem(input[0:last-6]).measure > 0 {
+						return replace(input, "IZATION", "IZE")
 					}
 				}
 			} else {
 				if processStem(input[0:last-4]).measure > 0 {
-					replace(input, "ATION", "ATE")
+					return replace(input, "ATION", "ATE")
 				}
 			}
 		}
 	} else if input[last] == 'R' {
 		if input[last-3:last] == "ATO" {
 			if processStem(input[0:last-3]).measure > 0 {
-				replace(input, "ATOR", "ATE")
+				return replace(input, "ATOR", "ATE")
+			}
+		}
+	}
+
+	return input
+}
+
+func step2ProcessS(input string) string {
+	last := len(input) - 1
+	if input[last] == 'M' {
+		if input[last-4:last-1] == "ALI" {
+			if processStem(input[0:last-4]).measure > 0 {
+				return replace(input, "ALISM", "AL")
+			}
+		}
+	} else if input[last] == 'S' {
+		if input[last-3:last-1] == "NE" {
+			str := input[last-6 : last-3]
+			if str == "IVE" {
+				if processStem(input[0:last-6]).measure > 0 {
+					return replace(input, "IVENESS", "IVE")
+				}
+			} else if str == "FUL" {
+				if processStem(input[0:last-6]).measure > 0 {
+					return replace(input, "FULNESS", "FUL")
+				}
+			} else if str == "OUS" {
+				if processStem(input[0:last-6]).measure > 0 {
+					return replace(input, "OUSNESS", "OUS")
+				}
+			}
+		}
+	}
+
+	return input
+}
+
+func step2ProcessT(input string) string {
+	last := len(input) - 1
+	if input[last] == 'I' {
+		if input[last-2] == 'I' {
+			if input[last-3] == 'L' {
+				if input[last-4] == 'A' {
+					if processStem(input[0:last-4]).measure > 0 {
+						return replace(input, "ALITI", "AL")
+					}
+				} else if input[last-5:last-3] == "BI" {
+					if processStem(input[0:last-5]).measure > 0 {
+						return replace(input, "BILITI", "BLE")
+					}
+				}
+			} else if input[last-3] == 'V' {
+				if input[last-4] == 'I' {
+					if processStem(input[0:last-4]).measure > 0 {
+						return replace(input, "IVITI", "IVE")
+					}
+				}
 			}
 		}
 	}

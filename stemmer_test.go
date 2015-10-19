@@ -318,6 +318,116 @@ var testCases = map[string]Step{
 		},
 	},
 
+	"step2": Step{
+		step2,
+		[]TestRule{
+			TestRule{
+				"RELATIONAL",
+				"RELATE",
+			},
+
+			TestRule{
+				"CONDITIONAL",
+				"CONDITION",
+			},
+
+			TestRule{
+				"RATIONAL",
+				"RATIONAL",
+			},
+
+			TestRule{
+				"VALENCI",
+				"VALENCE",
+			},
+
+			TestRule{
+				"HESITANCI",
+				"HESITANCE",
+			},
+
+			TestRule{
+				"DIGITIZER",
+				"DIGITIZE",
+			},
+
+			TestRule{
+				"CONFORMABLI",
+				"CONFORMABLE",
+			},
+
+			TestRule{
+				"RADICALLI",
+				"RADICAL",
+			},
+
+			TestRule{
+				"DIFFERENTLI",
+				"DIFFERENT",
+			},
+
+			TestRule{
+				"VILELI",
+				"VILE",
+			},
+
+			TestRule{
+				"ANALOGOUSLI",
+				"ANALOGOUS",
+			},
+
+			TestRule{
+				"VIETNAMIZATION",
+				"VIETNAMIZE",
+			},
+
+			TestRule{
+				"PREDICATION",
+				"PREDICATE",
+			},
+
+			TestRule{
+				"OPERATOR",
+				"OPERATE",
+			},
+
+			TestRule{
+				"FEUDALISM",
+				"FEUDAL",
+			},
+
+			TestRule{
+				"DECISIVENESS",
+				"DECISIVE",
+			},
+
+			TestRule{
+				"HOPEFULNESS",
+				"HOPEFUL",
+			},
+
+			TestRule{
+				"CALLOUSNESS",
+				"CALLOUS",
+			},
+
+			TestRule{
+				"FORMALITI",
+				"FORMAL",
+			},
+
+			TestRule{
+				"SENSITIVITI",
+				"SENSITIVE",
+			},
+
+			TestRule{
+				"SENSIBILITI",
+				"SENSIBLE",
+			},
+		},
+	},
+
 	"step5A": Step{
 		step5A,
 		[]TestRule{
