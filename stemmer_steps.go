@@ -279,6 +279,51 @@ func step2ProcessT(input string) string {
 	return input
 }
 
+func step3(input string) string {
+	last := len(input) - 1
+
+	if input[last] == 'E' {
+		str := input[last-4 : last]
+		if str == "ICAT" {
+			if processStem(input[0:last-4]).measure > 0 {
+				return replace(input, "ICATE", "IC")
+			}
+		} else if str == "ATIV" {
+			if processStem(input[0:last-4]).measure > 0 {
+				return replace(input, "ATIVE", "")
+			}
+		} else if str == "ALIZ" {
+			if processStem(input[0:last-4]).measure > 0 {
+				return replace(input, "ALIZE", "AL")
+			}
+		}
+	} else if input[last] == 'I' {
+		if input[last-4:last] == "ICIT" {
+			if processStem(input[0:last-4]).measure > 0 {
+				return replace(input, "ICITI", "IC")
+			}
+		}
+	} else if input[last] == 'L' {
+		if input[last-3:last] == "ICA" {
+			if processStem(input[0:last-3]).measure > 0 {
+				return replace(input, "ICAL", "IC")
+			}
+		} else if input[last-2:last] == "FU" {
+			if processStem(input[0:last-2]).measure > 0 {
+				return replace(input, "FUL", "")
+			}
+		}
+	} else if input[last] == 'S' {
+		if input[last-3:last] == "NES" {
+			if processStem(input[0:last-3]).measure > 0 {
+				return replace(input, "NESS", "")
+			}
+		}
+	}
+
+	return input
+}
+
 func step5A(input string) string {
 	last := len(input) - 1
 	if input[last] == 'E' {
