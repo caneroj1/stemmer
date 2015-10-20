@@ -17,6 +17,8 @@ func step1A(input string) string {
 		if !find(input, "S", last-1, last) {
 			return replace(input, "S", "")
 		}
+
+		return replace(input, "SS", "SS")
 	}
 
 	return input
@@ -200,10 +202,10 @@ func step2ProcessL(input string) string {
 
 func step2ProcessO(input string) string {
 	last := len(input) - 1
-	if input[last] == 'N' {
-		if input[last-4:last-1] == "ATI" {
-			if input[last-5] == 'Z' {
-				if input[last-6] == 'I' {
+	if find(input, "N", last, last+1) {
+		if find(input, "ATI", last-4, last-1) {
+			if find(input, "Z", last-5, last-4) {
+				if find(input, "I", last-6, last-5) {
 					if processStem(input[0:last-6]).measure > 0 {
 						return replace(input, "IZATION", "IZE")
 					}
@@ -214,8 +216,8 @@ func step2ProcessO(input string) string {
 				}
 			}
 		}
-	} else if input[last] == 'R' {
-		if input[last-3:last] == "ATO" {
+	} else if find(input, "R", last, last+1) {
+		if find(input, "ATO", last-3, last) {
 			if processStem(input[0:last-3]).measure > 0 {
 				return replace(input, "ATOR", "ATE")
 			}
@@ -227,14 +229,18 @@ func step2ProcessO(input string) string {
 
 func step2ProcessS(input string) string {
 	last := len(input) - 1
-	if input[last] == 'M' {
-		if input[last-4:last-1] == "ALI" {
+	if find(input, "M", last, last+1) {
+		if find(input, "ALI", last-4, last-1) {
 			if processStem(input[0:last-4]).measure > 0 {
 				return replace(input, "ALISM", "AL")
 			}
 		}
-	} else if input[last] == 'S' {
-		if input[last-3:last-1] == "NE" {
+	} else if find(input, "S", last, last+1) {
+		if find(input, "NE", last-3, last-1) {
+			if last-6 < 0 {
+				return input
+			}
+
 			str := input[last-6 : last-3]
 			if str == "IVE" {
 				if processStem(input[0:last-6]).measure > 0 {
@@ -257,20 +263,20 @@ func step2ProcessS(input string) string {
 
 func step2ProcessT(input string) string {
 	last := len(input) - 1
-	if input[last] == 'I' {
-		if input[last-2] == 'I' {
-			if input[last-3] == 'L' {
-				if input[last-4] == 'A' {
+	if find(input, "I", last, last+1) {
+		if find(input, "I", last-2, last-1) {
+			if find(input, "L", last-3, last-2) {
+				if find(input, "A", last-4, last-3) {
 					if processStem(input[0:last-4]).measure > 0 {
 						return replace(input, "ALITI", "AL")
 					}
-				} else if input[last-5:last-3] == "BI" {
+				} else if find(input, "BI", last-5, last-3) {
 					if processStem(input[0:last-5]).measure > 0 {
 						return replace(input, "BILITI", "BLE")
 					}
 				}
-			} else if input[last-3] == 'V' {
-				if input[last-4] == 'I' {
+			} else if find(input, "V", last-3, last-2) {
+				if find(input, "I", last-4, last-3) {
 					if processStem(input[0:last-4]).measure > 0 {
 						return replace(input, "IVITI", "IVE")
 					}
@@ -285,7 +291,11 @@ func step2ProcessT(input string) string {
 func step3(input string) string {
 	last := len(input) - 1
 
-	if input[last] == 'E' {
+	if find(input, "E", last, last+1) {
+		if last-4 < 0 {
+			return input
+		}
+
 		str := input[last-4 : last]
 		if str == "ICAT" {
 			if processStem(input[0:last-4]).measure > 0 {
@@ -300,24 +310,24 @@ func step3(input string) string {
 				return replace(input, "ALIZE", "AL")
 			}
 		}
-	} else if input[last] == 'I' {
-		if input[last-4:last] == "ICIT" {
+	} else if find(input, "I", last, last+1) {
+		if find(input, "ICIT", last-4, last) {
 			if processStem(input[0:last-4]).measure > 0 {
 				return replace(input, "ICITI", "IC")
 			}
 		}
-	} else if input[last] == 'L' {
-		if input[last-3:last] == "ICA" {
+	} else if find(input, "L", last, last+1) {
+		if find(input, "ICA", last-3, last) {
 			if processStem(input[0:last-3]).measure > 0 {
 				return replace(input, "ICAL", "IC")
 			}
-		} else if input[last-2:last] == "FU" {
+		} else if find(input, "FU", last-2, last) {
 			if processStem(input[0:last-2]).measure > 0 {
 				return replace(input, "FUL", "")
 			}
 		}
-	} else if input[last] == 'S' {
-		if input[last-3:last] == "NES" {
+	} else if find(input, "S", last, last+1) {
+		if find(input, "NES", last-3, last) {
 			if processStem(input[0:last-3]).measure > 0 {
 				return replace(input, "NESS", "")
 			}
@@ -329,6 +339,10 @@ func step3(input string) string {
 
 func step4(input string) string {
 	last := len(input) - 1
+
+	if last < 0 {
+		return input
+	}
 
 	switch input[last-1] {
 	case 'A':
@@ -362,7 +376,7 @@ func step4(input string) string {
 
 func step4ProcessA(input string) string {
 	last := len(input) - 1
-	if input[last] == 'L' {
+	if find(input, "L", last, last+1) {
 		if processStem(input[0:last-1]).measure > 1 {
 			return replace(input, "AL", "")
 		}
@@ -373,7 +387,11 @@ func step4ProcessA(input string) string {
 
 func step4ProcessC(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
+	if find(input, "E", last, last+1) {
+		if last-3 < 0 {
+			return input
+		}
+
 		str := input[last-3 : last-1]
 		if str == "AN" {
 			if processStem(input[0:last-3]).measure > 1 {
@@ -391,7 +409,7 @@ func step4ProcessC(input string) string {
 
 func step4ProcessE(input string) string {
 	last := len(input) - 1
-	if input[last] == 'R' {
+	if find(input, "R", last, last+1) {
 		if processStem(input[0:last-1]).measure > 1 {
 			return replace(input, "ER", "")
 		}
@@ -402,7 +420,7 @@ func step4ProcessE(input string) string {
 
 func step4ProcessI(input string) string {
 	last := len(input) - 1
-	if input[last] == 'C' {
+	if find(input, "C", last, last+1) {
 		if processStem(input[0:last-1]).measure > 1 {
 			return replace(input, "IC", "")
 		}
@@ -413,7 +431,11 @@ func step4ProcessI(input string) string {
 
 func step4ProcessL(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
+	if find(input, "E", last, last+1) {
+		if last-3 < 0 {
+			return input
+		}
+
 		str := input[last-3 : last-1]
 		if str == "AB" {
 			if processStem(input[0:last-3]).measure > 1 {
@@ -431,14 +453,14 @@ func step4ProcessL(input string) string {
 
 func step4ProcessN(input string) string {
 	last := len(input) - 1
-	if input[last] == 'T' {
-		if input[last-2] == 'A' {
+	if find(input, "T", last, last+1) {
+		if find(input, "A", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "ANT", "")
 			}
-		} else if input[last-2] == 'E' {
-			if input[last-3] == 'M' {
-				if input[last-4] == 'E' {
+		} else if find(input, "E", last-2, last-1) {
+			if find(input, "M", last-3, last-2) {
+				if find(input, "E", last-4, last-3) {
 					if processStem(input[0:last-4]).measure > 1 {
 						return replace(input, "EMENT", "")
 					}
@@ -460,14 +482,14 @@ func step4ProcessN(input string) string {
 
 func step4ProcessO(input string) string {
 	last := len(input) - 1
-	if input[last] == 'N' {
-		if input[last-2] == 'I' {
+	if find(input, "N", last, last+1) {
+		if find(input, "I", last-2, last-1) {
 			stem := processStem(input[0 : last-2])
 			if stem.measure > 1 && (stem.lastChar == 'S' || stem.lastChar == 'T') {
 				return replace(input, "ION", "")
 			}
 		}
-	} else if input[last] == 'U' {
+	} else if find(input, "U", last, last+1) {
 		if processStem(input[0:last-1]).measure > 1 {
 			return replace(input, "OU", "")
 		}
@@ -478,8 +500,8 @@ func step4ProcessO(input string) string {
 
 func step4ProcessS(input string) string {
 	last := len(input) - 1
-	if input[last] == 'M' {
-		if input[last-2] == 'I' {
+	if find(input, "M", last, last+1) {
+		if find(input, "I", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "ISM", "")
 			}
@@ -491,14 +513,14 @@ func step4ProcessS(input string) string {
 
 func step4ProcessT(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
-		if input[last-2] == 'A' {
+	if find(input, "E", last, last+1) {
+		if find(input, "A", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "ATE", "")
 			}
 		}
-	} else if input[last] == 'I' {
-		if input[last-2] == 'I' {
+	} else if find(input, "I", last, last+1) {
+		if find(input, "I", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "ITI", "")
 			}
@@ -510,8 +532,8 @@ func step4ProcessT(input string) string {
 
 func step4ProcessU(input string) string {
 	last := len(input) - 1
-	if input[last] == 'S' {
-		if input[last-2] == 'O' {
+	if find(input, "S", last, last+1) {
+		if find(input, "O", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "OUS", "")
 			}
@@ -523,8 +545,8 @@ func step4ProcessU(input string) string {
 
 func step4ProcessV(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
-		if input[last-2] == 'I' {
+	if find(input, "E", last, last+1) {
+		if find(input, "I", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "IVE", "")
 			}
@@ -536,8 +558,8 @@ func step4ProcessV(input string) string {
 
 func step4ProcessZ(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
-		if input[last-2] == 'I' {
+	if find(input, "E", last, last+1) {
+		if find(input, "I", last-2, last-1) {
 			if processStem(input[0:last-2]).measure > 1 {
 				return replace(input, "IZE", "")
 			}
@@ -549,7 +571,7 @@ func step4ProcessZ(input string) string {
 
 func step5A(input string) string {
 	last := len(input) - 1
-	if input[last] == 'E' {
+	if find(input, "E", last, last+1) {
 		stem := processStem(input[0:last])
 		if stem.measure > 1 || (stem.measure == 1 && !stem.oCondition) {
 			return input[0:last]
@@ -560,10 +582,9 @@ func step5A(input string) string {
 }
 
 func step5B(input string) string {
-	last := len(input) - 1
 	stem := processStem(input)
 	if stem.measure > 1 && stem.dCondition && stem.lastChar == 'L' {
-		return input[0:last]
+		return input[0 : len(input)-1]
 	}
 
 	return input

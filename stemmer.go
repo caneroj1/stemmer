@@ -123,9 +123,30 @@ func replace(input, target, replacement string) string {
 // at the range specified by start and end.
 func find(input, target string, start, end int) bool {
 	length := len(input)
-	if length < end {
+	if length < end || start < 0 {
 		return false
 	}
 
 	return input[start:end] == target
+}
+
+// Stem is the entry function into the stemmer.
+// We check to make sure the word isn't too short,
+// and then we convert it to all uppercase
+func Stem(input string) string {
+	if len(input) < 3 {
+		return input
+	}
+
+	upper := strings.ToUpper(input)
+	stemmed := step1A(upper)
+	stemmed = step1B(stemmed)
+	stemmed = step1C(stemmed)
+	stemmed = step2(stemmed)
+	stemmed = step3(stemmed)
+	stemmed = step4(stemmed)
+	stemmed = step5A(stemmed)
+	stemmed = step5B(stemmed)
+
+	return stemmed
 }

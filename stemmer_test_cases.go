@@ -75,6 +75,14 @@ var findTests = []TestFindCase{
 		1,
 		true,
 	},
+
+	TestFindCase{
+		"THAT",
+		"T",
+		-2,
+		4,
+		false,
+	},
 }
 
 var stemCases = []TestStemmer{
