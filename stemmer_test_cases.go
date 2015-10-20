@@ -9,6 +9,16 @@ type TestStemmer struct {
 	want stem
 }
 
+// TestFindCase tests the function to find a substring
+// at the range given by start and end.
+type TestFindCase struct {
+	in     string
+	target string
+	start  int
+	end    int
+	want   bool
+}
+
 // TestSub holds a few string values. in is the input
 // string, target is the substring we want to replace with
 // replacement, and want is what the result should be.
@@ -31,6 +41,40 @@ type TestRule struct {
 type Step struct {
 	f     func(string) string
 	rules []TestRule
+}
+
+var findTests = []TestFindCase{
+	TestFindCase{
+		"DOG",
+		"DO",
+		0,
+		2,
+		true,
+	},
+
+	TestFindCase{
+		"DOG",
+		"DO",
+		0,
+		3,
+		false,
+	},
+
+	TestFindCase{
+		"D",
+		"DO",
+		0,
+		1,
+		false,
+	},
+
+	TestFindCase{
+		"D",
+		"D",
+		0,
+		1,
+		true,
+	},
 }
 
 var stemCases = []TestStemmer{
@@ -462,6 +506,106 @@ var testCases = map[string]Step{
 			TestRule{
 				"GOODNESS",
 				"GOOD",
+			},
+		},
+	},
+
+	"step4": Step{
+		step4,
+		[]TestRule{
+			TestRule{
+				"REVIVAL",
+				"REVIV",
+			},
+
+			TestRule{
+				"ALLOWANCE",
+				"ALLOW",
+			},
+
+			TestRule{
+				"INFERENCE",
+				"INFER",
+			},
+
+			TestRule{
+				"AIRLINER",
+				"AIRLIN",
+			},
+
+			TestRule{
+				"GYROSCOPIC",
+				"GYROSCOP",
+			},
+
+			TestRule{
+				"ADJUSTABLE",
+				"ADJUST",
+			},
+
+			TestRule{
+				"DEFENSIBLE",
+				"DEFENS",
+			},
+
+			TestRule{
+				"IRRITANT",
+				"IRRIT",
+			},
+
+			TestRule{
+				"REPLACEMENT",
+				"REPLAC",
+			},
+
+			TestRule{
+				"ADJUSTMENT",
+				"ADJUST",
+			},
+
+			TestRule{
+				"DEPENDENT",
+				"DEPEND",
+			},
+
+			TestRule{
+				"ADOPTION",
+				"ADOPT",
+			},
+
+			TestRule{
+				"HOMOLOGOU",
+				"HOMOLOG",
+			},
+
+			TestRule{
+				"COMMUNISM",
+				"COMMUN",
+			},
+
+			TestRule{
+				"ACTIVATE",
+				"ACTIV",
+			},
+
+			TestRule{
+				"HOMOLOGOUS",
+				"HOMOLOG",
+			},
+
+			TestRule{
+				"ANGULARITI",
+				"ANGULAR",
+			},
+
+			TestRule{
+				"EFFECTIVE",
+				"EFFECT",
+			},
+
+			TestRule{
+				"BOWDLERIZE",
+				"BOWDLER",
 			},
 		},
 	},

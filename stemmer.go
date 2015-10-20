@@ -118,3 +118,14 @@ func replace(input, target, replacement string) string {
 
 	return input
 }
+
+// find tries to match the substring given by target in int
+// at the range specified by start and end.
+func find(input, target string, start, end int) bool {
+	length := len(input)
+	if length < end {
+		return false
+	}
+
+	return input[start:end] == target
+}

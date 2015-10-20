@@ -36,3 +36,14 @@ func TestRules(t *testing.T) {
 		}
 	}
 }
+
+// TestFind tests the function that checks a string
+// for the presence of a substring.
+func TestFind(t *testing.T) {
+	for _, test := range findTests {
+		got := find(test.in, test.target, test.start, test.end)
+		if got != test.want {
+			t.Errorf("find(%v, %d, %d) = %v. Wanted = %v", test.in, test.start, test.end, got, test.want)
+		}
+	}
+}
