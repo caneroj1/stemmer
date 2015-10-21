@@ -1,8 +1,9 @@
 package stemmer
 
-import "strings"
-
-// import "fmt"
+import (
+	"runtime"
+	"strings"
+)
 
 // A stem represents the part of a word
 // or whole word before a matching
@@ -149,4 +150,54 @@ func Stem(input string) string {
 	stemmed = step5B(stemmed)
 
 	return stemmed
+}
+
+// StemMultiple accepts a slice of strings and stems each of them.
+func StemMultiple(words []string) (output []string) {
+	output = make([]string, len(words))
+	for idx, word := range words {
+		output[idx] = Stem(word)
+	}
+
+	return
+}
+
+// StemMultipleMutate accepts a pointer to a slice of strings and stems them in place.
+// It modifies the original slice.
+func StemMultipleMutate(words *[]string) {
+	for idx, word := range *words {
+		(*words)[idx] = Stem(word)
+	}
+}
+
+// StemConcurrent accepts a pointer to a slice of strings and stems them in place.
+// It tries to offload the work into multiple threads. It makes no guarantees about
+// the order of the stems in the modified slice.
+func StemConcurrent(words *[]string) {
+	CPUs := runtime.NumCPU()
+	length := len(*words)
+	output := make(chan string)
+	partition := length / CPUs
+
+	var CPU int
+	for CPU = 0; CPU < CPUs; CPU++ {
+		go func(strs []string) {
+			for _, word := range strs {
+				output <- Stem(word)
+			}
+		}((*words)[CPU*partition : (CPU+1)*partition])
+	}
+
+	// if there are leftover words, stem them now
+	if length-(CPU)*partition > 0 {
+		go func(strs []string) {
+			for _, word := range strs {
+				output <- Stem(word)
+			}
+		}((*words)[(CPU)*partition : length])
+	}
+
+	for idx := 0; idx < length; idx++ {
+		(*words)[idx] = <-output
+	}
 }

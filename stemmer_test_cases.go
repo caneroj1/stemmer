@@ -1,17 +1,17 @@
 package stemmer
 
-// TestStemmer holds a slice of strings
+// testStemmer holds a slice of strings
 // as input and has a corresponding slice
 // of stem structs for what the test should
 // should output.
-type TestStemmer struct {
+type testStemmer struct {
 	in   string
 	want stem
 }
 
-// TestFindCase tests the function to find a substring
+// testFindCase tests the function to find a substring
 // at the range given by start and end.
-type TestFindCase struct {
+type testFindCase struct {
 	in     string
 	target string
 	start  int
@@ -19,32 +19,32 @@ type TestFindCase struct {
 	want   bool
 }
 
-// TestSub holds a few string values. in is the input
+// testSub holds a few string values. in is the input
 // string, target is the substring we want to replace with
 // replacement, and want is what the result should be.
-type TestSub struct {
+type testSub struct {
 	in          string
 	target      string
 	replacement string
 	want        string
 }
 
-// TestRule holds an in string and a want string, which
+// testRule holds an in string and a want string, which
 // is what the the result of the test should be.
-type TestRule struct {
+type testRule struct {
 	in   string
 	want string
 }
 
-// Step holds a function that will be used to map all of the inputs
+// step holds a function that will be used to map all of the inputs
 // in rules.
-type Step struct {
+type step struct {
 	f     func(string) string
-	rules []TestRule
+	rules []testRule
 }
 
-var findTests = []TestFindCase{
-	TestFindCase{
+var findTests = []testFindCase{
+	testFindCase{
 		"DOG",
 		"DO",
 		0,
@@ -52,7 +52,7 @@ var findTests = []TestFindCase{
 		true,
 	},
 
-	TestFindCase{
+	testFindCase{
 		"DOG",
 		"DO",
 		0,
@@ -60,7 +60,7 @@ var findTests = []TestFindCase{
 		false,
 	},
 
-	TestFindCase{
+	testFindCase{
 		"D",
 		"DO",
 		0,
@@ -68,7 +68,7 @@ var findTests = []TestFindCase{
 		false,
 	},
 
-	TestFindCase{
+	testFindCase{
 		"D",
 		"D",
 		0,
@@ -76,7 +76,7 @@ var findTests = []TestFindCase{
 		true,
 	},
 
-	TestFindCase{
+	testFindCase{
 		"THAT",
 		"T",
 		-2,
@@ -85,132 +85,132 @@ var findTests = []TestFindCase{
 	},
 }
 
-var stemCases = []TestStemmer{
+var stemCases = []testStemmer{
 
-	TestStemmer{
+	testStemmer{
 		"TR",
 		makeStem(0, false, false, true, 'R'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"EE",
 		makeStem(0, false, true, false, 'E'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"TREE",
 		makeStem(0, false, true, false, 'E'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"Y",
 		makeStem(0, false, true, false, 'Y'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"BY",
 		makeStem(0, false, true, false, 'Y'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"TROUBLE",
 		makeStem(1, false, true, false, 'E'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"TRoublE",
 		makeStem(1, false, true, false, 'E'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"OATS",
 		makeStem(1, false, true, true, 'S'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"TREES",
 		makeStem(1, false, true, false, 'S'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"IVY",
 		makeStem(1, false, true, false, 'Y'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"ORRERY",
 		makeStem(2, false, true, false, 'Y'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"OATEN",
 		makeStem(2, true, true, false, 'N'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"PRIVATE",
 		makeStem(2, false, true, false, 'E'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"TROUBLES",
 		makeStem(2, true, true, false, 'S'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"troubles",
 		makeStem(2, true, true, false, 'S'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"relational",
 		makeStem(4, true, true, false, 'L'),
 	},
 
-	TestStemmer{
+	testStemmer{
 		"rational",
 		makeStem(3, true, true, false, 'L'),
 	},
 }
 
-var subCases = []TestSub{
+var subCases = []testSub{
 
-	TestSub{
+	testSub{
 		"caresses",
 		"sses",
 		"ss",
 		"caress",
 	},
 
-	TestSub{
+	testSub{
 		"ponies",
 		"ies",
 		"i",
 		"poni",
 	},
 
-	TestSub{
+	testSub{
 		"caress",
 		"ss",
 		"ss",
 		"caress",
 	},
 
-	TestSub{
+	testSub{
 		"cats",
 		"s",
 		"",
 		"cat",
 	},
 
-	TestSub{
+	testSub{
 		"relational",
 		"ational",
 		"ate",
 		"relate",
 	},
 
-	TestSub{
+	testSub{
 		"conditional",
 		"tional",
 		"tion",
@@ -218,435 +218,435 @@ var subCases = []TestSub{
 	},
 }
 
-var testCases = map[string]Step{
+var testCases = map[string]step{
 
-	"step1A": Step{
+	"step1A": step{
 		step1A,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"CARESSES",
 				"CARESS",
 			},
 
-			TestRule{
+			testRule{
 				"PONIES",
 				"PONI",
 			},
 
-			TestRule{
+			testRule{
 				"TIES",
 				"TI",
 			},
 
-			TestRule{
+			testRule{
 				"CARESS",
 				"CARESS",
 			},
 
-			TestRule{
+			testRule{
 				"CATS",
 				"CAT",
 			},
 		},
 	},
 
-	"step1B": Step{
+	"step1B": step{
 		step1B,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"FEED",
 				"FEED",
 			},
 
-			TestRule{
+			testRule{
 				"AGREED",
 				"AGREE",
 			},
 
-			TestRule{
+			testRule{
 				"PLASTERED",
 				"PLASTER",
 			},
 
-			TestRule{
+			testRule{
 				"BLED",
 				"BLED",
 			},
 
-			TestRule{
+			testRule{
 				"MOTORING",
 				"MOTOR",
 			},
 
-			TestRule{
+			testRule{
 				"SING",
 				"SING",
 			},
 
-			TestRule{
+			testRule{
 				"CONFLATED",
 				"CONFLATE",
 			},
 
-			TestRule{
+			testRule{
 				"TROUBLED",
 				"TROUBLE",
 			},
 
-			TestRule{
+			testRule{
 				"SIZED",
 				"SIZE",
 			},
 
-			TestRule{
+			testRule{
 				"HOPPING",
 				"HOP",
 			},
 
-			TestRule{
+			testRule{
 				"TANNED",
 				"TAN",
 			},
 
-			TestRule{
+			testRule{
 				"TANNING",
 				"TAN",
 			},
 
-			TestRule{
+			testRule{
 				"FALLING",
 				"FALL",
 			},
 
-			TestRule{
+			testRule{
 				"FALLED",
 				"FALL",
 			},
 
-			TestRule{
+			testRule{
 				"HISSING",
 				"HISS",
 			},
 
-			TestRule{
+			testRule{
 				"FIZZING",
 				"FIZZ",
 			},
 
-			TestRule{
+			testRule{
 				"FIZZED",
 				"FIZZ",
 			},
 
-			TestRule{
+			testRule{
 				"FAILING",
 				"FAIL",
 			},
 
-			TestRule{
+			testRule{
 				"FILING",
 				"FILE",
 			},
 		},
 	},
 
-	"step1C": Step{
+	"step1C": step{
 		step1C,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"HAPPY",
 				"HAPPI",
 			},
-			TestRule{
+			testRule{
 				"SKY",
 				"SKY",
 			},
-			TestRule{
+			testRule{
 				"GUY",
 				"GUI",
 			},
 		},
 	},
 
-	"step2": Step{
+	"step2": step{
 		step2,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"RELATIONAL",
 				"RELATE",
 			},
 
-			TestRule{
+			testRule{
 				"CONDITIONAL",
 				"CONDITION",
 			},
 
-			TestRule{
+			testRule{
 				"RATIONAL",
 				"RATIONAL",
 			},
 
-			TestRule{
+			testRule{
 				"VALENCI",
 				"VALENCE",
 			},
 
-			TestRule{
+			testRule{
 				"HESITANCI",
 				"HESITANCE",
 			},
 
-			TestRule{
+			testRule{
 				"DIGITIZER",
 				"DIGITIZE",
 			},
 
-			TestRule{
+			testRule{
 				"CONFORMABLI",
 				"CONFORMABLE",
 			},
 
-			TestRule{
+			testRule{
 				"RADICALLI",
 				"RADICAL",
 			},
 
-			TestRule{
+			testRule{
 				"DIFFERENTLI",
 				"DIFFERENT",
 			},
 
-			TestRule{
+			testRule{
 				"VILELI",
 				"VILE",
 			},
 
-			TestRule{
+			testRule{
 				"ANALOGOUSLI",
 				"ANALOGOUS",
 			},
 
-			TestRule{
+			testRule{
 				"VIETNAMIZATION",
 				"VIETNAMIZE",
 			},
 
-			TestRule{
+			testRule{
 				"PREDICATION",
 				"PREDICATE",
 			},
 
-			TestRule{
+			testRule{
 				"OPERATOR",
 				"OPERATE",
 			},
 
-			TestRule{
+			testRule{
 				"FEUDALISM",
 				"FEUDAL",
 			},
 
-			TestRule{
+			testRule{
 				"DECISIVENESS",
 				"DECISIVE",
 			},
 
-			TestRule{
+			testRule{
 				"HOPEFULNESS",
 				"HOPEFUL",
 			},
 
-			TestRule{
+			testRule{
 				"CALLOUSNESS",
 				"CALLOUS",
 			},
 
-			TestRule{
+			testRule{
 				"FORMALITI",
 				"FORMAL",
 			},
 
-			TestRule{
+			testRule{
 				"SENSITIVITI",
 				"SENSITIVE",
 			},
 
-			TestRule{
+			testRule{
 				"SENSIBILITI",
 				"SENSIBLE",
 			},
 		},
 	},
 
-	"step3": Step{
+	"step3": step{
 		step3,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"TRIPLICATE",
 				"TRIPLIC",
 			},
 
-			TestRule{
+			testRule{
 				"FORMATIVE",
 				"FORM",
 			},
 
-			TestRule{
+			testRule{
 				"FORMALIZE",
 				"FORMAL",
 			},
 
-			TestRule{
+			testRule{
 				"ELECTRICITI",
 				"ELECTRIC",
 			},
 
-			TestRule{
+			testRule{
 				"ELECTRICAL",
 				"ELECTRIC",
 			},
 
-			TestRule{
+			testRule{
 				"HOPEFUL",
 				"HOPE",
 			},
 
-			TestRule{
+			testRule{
 				"GOODNESS",
 				"GOOD",
 			},
 		},
 	},
 
-	"step4": Step{
+	"step4": step{
 		step4,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"REVIVAL",
 				"REVIV",
 			},
 
-			TestRule{
+			testRule{
 				"ALLOWANCE",
 				"ALLOW",
 			},
 
-			TestRule{
+			testRule{
 				"INFERENCE",
 				"INFER",
 			},
 
-			TestRule{
+			testRule{
 				"AIRLINER",
 				"AIRLIN",
 			},
 
-			TestRule{
+			testRule{
 				"GYROSCOPIC",
 				"GYROSCOP",
 			},
 
-			TestRule{
+			testRule{
 				"ADJUSTABLE",
 				"ADJUST",
 			},
 
-			TestRule{
+			testRule{
 				"DEFENSIBLE",
 				"DEFENS",
 			},
 
-			TestRule{
+			testRule{
 				"IRRITANT",
 				"IRRIT",
 			},
 
-			TestRule{
+			testRule{
 				"REPLACEMENT",
 				"REPLAC",
 			},
 
-			TestRule{
+			testRule{
 				"ADJUSTMENT",
 				"ADJUST",
 			},
 
-			TestRule{
+			testRule{
 				"DEPENDENT",
 				"DEPEND",
 			},
 
-			TestRule{
+			testRule{
 				"ADOPTION",
 				"ADOPT",
 			},
 
-			TestRule{
+			testRule{
 				"HOMOLOGOU",
 				"HOMOLOG",
 			},
 
-			TestRule{
+			testRule{
 				"COMMUNISM",
 				"COMMUN",
 			},
 
-			TestRule{
+			testRule{
 				"ACTIVATE",
 				"ACTIV",
 			},
 
-			TestRule{
+			testRule{
 				"HOMOLOGOUS",
 				"HOMOLOG",
 			},
 
-			TestRule{
+			testRule{
 				"ANGULARITI",
 				"ANGULAR",
 			},
 
-			TestRule{
+			testRule{
 				"EFFECTIVE",
 				"EFFECT",
 			},
 
-			TestRule{
+			testRule{
 				"BOWDLERIZE",
 				"BOWDLER",
 			},
 		},
 	},
 
-	"step5A": Step{
+	"step5A": step{
 		step5A,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"PROBATE",
 				"PROBAT",
 			},
 
-			TestRule{
+			testRule{
 				"RATE",
 				"RATE",
 			},
 
-			TestRule{
+			testRule{
 				"CEASE",
 				"CEAS",
 			},
 		},
 	},
 
-	"step5B": Step{
+	"step5B": step{
 		step5B,
-		[]TestRule{
-			TestRule{
+		[]testRule{
+			testRule{
 				"CONTROLL",
 				"CONTROL",
 			},
 
-			TestRule{
+			testRule{
 				"ROLL",
 				"ROLL",
 			},
