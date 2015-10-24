@@ -14,6 +14,7 @@ func main() {
   // stem a single word
   stem := stemmer.Stem(str)
 
+  // stem = RUN
 
   strings := []string{
     "playing",
@@ -24,13 +25,18 @@ func main() {
   // stem a list of words
   stems := stemmer.StemMultiple(strings)
 
+  // stems = [PLAI SKI SIN]
+
   // stem a list of words in place, modifying the original slice
   stemmer.StemMultipleMutate(strings)
-
+  
+  // strings = [PLAI SKI SIN]
+  
   // stem a list of words concurrently. this also stems in place, modifying
   // the original slice.
   // NOTE: the order of the strings is not guaranteed to be the same.
-  stemmer.StemMultipleConcurrent(strings)
+  stemmer.StemConcurrent(strings)
 
+  // strings = [PLAI SKI SIN]
 }
 ```
