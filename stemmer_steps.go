@@ -98,7 +98,7 @@ func step1C(input string) string {
 func step2(input string) string {
 	last := len(input) - 1
 
-	if last < 0 {
+	if last-1 < 0 {
 		return input
 	}
 
@@ -340,7 +340,7 @@ func step3(input string) string {
 func step4(input string) string {
 	last := len(input) - 1
 
-	if last < 0 {
+	if last-1 < 0 {
 		return input
 	}
 
